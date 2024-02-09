@@ -143,7 +143,7 @@ describe('Post controller', () => {
         it('should return post obj', () => {
             findPostStub = sinon.stub(PostModel, 'findPost').yields(null, expectedResult);
             PostController.find(req, res);
-            sinon.assert.calledWith(PostModel.findPost, req.params.id);
+            sinon.assert.calledWith(PostModel.findPost, req.params._id);
             sinon.assert.calledWith(res.json, sinon.match({ title: req.body.title }));
             sinon.assert.calledWith(res.json, sinon.match({ content: req.body.content }));
             sinon.assert.calledWith(res.json, sinon.match({ author: req.body.author }));
@@ -152,7 +152,7 @@ describe('Post controller', () => {
         it('should return 404 for non-existing post id', () => {
             findPostStub = sinon.stub(PostModel, 'findPost').yields(null, null);
             PostController.find(req, res);
-            sinon.assert.calledWith(PostModel.findPost, req.params.id);
+            sinon.assert.calledWith(PostModel.findPost, req.params._id);
             sinon.assert.calledWith(res.status, 404);
             sinon.assert.calledOnce(res.status(404).end);
         });
@@ -160,7 +160,7 @@ describe('Post controller', () => {
         it('should return status 500 on server error', () => {
             findPostStub = sinon.stub(PostModel, 'findPost').yields(error);
             PostController.find(req, res);
-            sinon.assert.calledWith(PostModel.findPost, req.params.id);
+            sinon.assert.calledWith(PostModel.findPost, req.params._id);
             sinon.assert.calledWith(res.status, 500);
             sinon.assert.calledOnce(res.status(500).end);
         });
