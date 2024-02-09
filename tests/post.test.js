@@ -87,7 +87,7 @@ describe('Post controller', () => {
                 json: sinon.spy(),
                 status: sinon.stub().returns({ end: sinon.spy() })
             };
-            expectedResult = req.body
+            expectedResult = req.body;
         });
 
         afterEach(() => {
@@ -96,29 +96,29 @@ describe('Post controller', () => {
         });
 
         it('should return updated PostController obj', () => {
-            updatePostStub = sinon.stub(PostController, 'update').yields(null, expectedResult);
+            updatePostStub = sinon.stub(PostModel, 'updatePost').yields(null, expectedResult);
             PostController.update(req, res);
 
-            sinon.assert.calledWith(PostController.update, req.params.id, req.body, { new: true });
+            sinon.assert.calledWith(PostModel.updatePost, req.body);
             sinon.assert.calledWith(res.json, sinon.match({ title: req.body.title }));
             sinon.assert.calledWith(res.json, sinon.match({ content: req.body.content }));
             sinon.assert.calledWith(res.json, sinon.match({ author: req.body.author }));
         });
 
         it('should return 404 for non-existing PostController id', () => {
-            updatePostStub = sinon.stub(PostController, 'update').yields(null, null);
+            updatePostStub = sinon.stub(PostModel, 'updatePost').yields(null, null);
             PostController.update(req, res);
 
-            sinon.assert.calledWith(PostController.update, req.params.id, req.body, { new: true });
+            sinon.assert.calledWith(PostModel.updatePost, req.body);
             sinon.assert.calledWith(res.status, 404);
             sinon.assert.calledOnce(res.status(404).end);
         });
 
         it('should return status 500 on server error', () => {
-            updatePostStub = sinon.stub(PostController, 'update').yields(error);
+            updatePostStub = sinon.stub(PostModel, 'updatePost').yields(error);
             PostController.update(req, res);
 
-            sinon.assert.calledWith(PostController.update, req.params.id, req.body, { new: true });
+            sinon.assert.calledWith(PostModel.updatePost, req.body);
             sinon.assert.calledWith(res.status, 500);
             sinon.assert.calledOnce(res.status(500).end);
         });
